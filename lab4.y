@@ -42,9 +42,11 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "lex.yy.c"
+#include "symtable.h"
 
 int regs[26];
 int base, debugsw;
+int offset = 0;
 
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
@@ -59,14 +61,32 @@ void yyerror (s)  /* Called by yyparse on error */
 
 %start p
 
+%union {
+
+	char * string;
+	int value;
+
+}
+
 %token INT
 %token INTEGER
 %token VARIABLE
+%token PLUS
+%token MINUS
+%token MULT
+%token DIV
+%token DISPLAY
+%token SEARCH
+%token MODIFY
 
 %left '|'
 %left '&'
-%left '+' '-'
-%left '*' '/' '%'
+//%left '+' '-'
+%left '%'
+//%left '*' '/' '%'
+
+%type<value> expr INTEGER
+%type<string> VARIABLE
 
 %nonassoc UMINUS
 
@@ -81,42 +101,100 @@ decls	: 	/*empty*/
 	;
 
 dec	:	INT VARIABLE ';' '\n'
+    			{
+				Insert("INT", "temp", 0, offset++);
+			}
+    	|	INT expr '=' expr ';' '\n'	
+    			{	
+				Insert("INT", $2, $4, offset++);
+			}
     	;
 
 list	:	/* empty */
 	|	list stat '\n'
 	|	list error '\n'
-			{ yyerrok; }
+	|	list command '\n'
+			{ 
+				yyerrok; 
+			}
 	;
 
 stat	:	expr
-			{ fprintf(stderr,"the anwser is %d\n", $1); }
+			{ 
+				fprintf(stderr,"the anwser is %d\n", $1); 
+			}
 	|	VARIABLE '=' expr
-			{ regs[$1] = $3; }
+			{ 
+				if(Search($1)==1) Modify($1, $3);
+				else puts("label does not exist"); 
+			}
+	;
+
+command	:	DISPLAY
+			{
+				Display();
+			}
+	|	SEARCH VARIABLE
+			{
+				if(Search($2)==1)puts("true");
+				else(puts("false"));
+			}
+	|	MODIFY VARIABLE expr
+			{
+				Modify($2, $3);
+				printf("changed %s to %d\n", $2, $3);
+			}
 	;
 
 expr	:	'(' expr ')'
-			{ $$ = $2; }
-	|	expr '-' expr
-			{ $$ = $1 - $3; }
-	|	expr '+' expr
-			{ $$ = $1 + $3; } 
-	|	expr '*' expr
-			{ $$ = $1 * $3; }
-	|	expr '/' expr
-			{ $$ = $1 / $3; }
+			{ 
+				$$ = $2; 
+			}
+		VARIABLE '=' VARIABLE
+			{
+				/*Modify($1, */
+			}
+	|	expr MINUS  expr
+			{ 
+				$$ = $1 - $3; 
+			}
+	|	expr PLUS expr
+			{ 
+				$$ = $1 + $3; 
+			} 
+	|	expr MULT expr
+			{ 
+				$$ = $1 * $3; 
+			}
+	|	expr DIV expr
+			{ 
+				$$ = $1 / $3; 
+			}
 	|	expr '%' expr
-			{ $$ = $1 % $3; }
+			{ 
+				$$ = $1 % $3; 
+			}
 	|	expr '&' expr
-			{ $$ = $1 & $3; }
+			{ 
+				$$ = $1 & $3; 
+			}
 	|	expr '|' expr
-			{ $$ = $1 | $3; }
-	|	'-' expr	%prec UMINUS
-			{ $$ = -$2; }
+			{
+				$$ = $1 | $3; 
+			}
+	|	MINUS expr	%prec UMINUS
+			{ 
+				$$ = -$2; 
+			}
 	|	VARIABLE
-			{ $$ = regs[$1]; fprintf(stderr,"found a variable value =%d\n",$1); }
-	|	INTEGER {$$=$1; fprintf(stderr,"found an integer\n");}
+			{ 
+				$$ = $1; 
+			}
+	|	INTEGER {
+				$$=$1;
+			}
 	;
+
 
 
 

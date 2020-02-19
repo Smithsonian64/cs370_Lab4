@@ -19,7 +19,7 @@
 #include<malloc.h>
 #include<string.h>
 #include<stdlib.h>
-#include"symtable.h"
+/*#include"symtable.h"*/
 
 int size=0;
 
@@ -28,9 +28,20 @@ struct SymbTab {
 	int addr;
 	struct SymbTab *next;
 };
-
+/*
 struct SymbTab *first,*last;
 
+void Insert();
+
+void Display();
+
+int Search(char lab[]);
+
+void Modify();
+
+void Delete();
+*/
+/*
 void main() {
 	int op,y;
 	char la[10];
@@ -72,8 +83,8 @@ void main() {
 
 	while(op<6);
 
-}  /* and of main */
-
+}  
+*/
 void Insert() {
 	int n;
 	char l[10];

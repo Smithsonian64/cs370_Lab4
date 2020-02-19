@@ -86,11 +86,10 @@ void yyerror (s)  /* Called by yyparse on error */
 %token MODIFY
 %token HELP
 
-%left '|'
-%left '&'
-//%left '+' '-'
-%left '%'
-//%left '*' '/' '%'
+%left OR
+%left AND
+%left PLUS MINUS
+%left MULT DIV MODULUS
 
 %type<value> expr INTEGER
 %type<string> VARIABLE

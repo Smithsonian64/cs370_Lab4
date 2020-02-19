@@ -1,0 +1,63 @@
+Commands:
+
+//commands are typed with first the actual
+command then the arguments. some commands
+take no arguments.//
+
+display
+	
+	//displays the current symbol table//
+
+search VARIABLE
+	
+	//prints true if variable exists in the
+	symbol table, false otherwise//
+
+delete VARIABLE
+
+	//deletes the indicated variable from
+	the symbol table. Does nothing if
+	the variable does not exists//
+ 
+modify VARIABLE VALUE
+	
+	//Changes the indicated variable's
+	value to the idicated value. Does
+	nothing if the variable does not
+	exist.//
+
+help
+	
+	//displays help information.//
+
+Declarations:
+
+int VARIABLE = EXPRESSION;
+	
+	//inserts the indicated variable into
+	the symbol table with the value of the
+	indicated expression.//
+
+int VARIABLE;
+	
+	//inserts the indicated variable into
+	the symbol table with the default value
+	0.//
+
+Statements:
+
+*Note: an expression can include variables
+themselves and will be evaluated with the 
+value of those variables.*
+
+VARIABLE = EXPRESSION
+
+	//Chagnes the value of the indicated
+	variable to that of the expression.
+	does nothing if any variables do not
+	exist.//
+
+EXPRESSION
+
+	//Displays the value of the current
+	expression.//

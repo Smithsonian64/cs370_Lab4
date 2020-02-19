@@ -43,6 +43,8 @@ void Modify();
 
 void Delete(char * name);
 
+int getData(char * name);
+
 void Insert(char * symbol, char * name, int data, int offset) {
 	int n;
 	n=Search(name);
@@ -65,7 +67,7 @@ void Insert(char * symbol, char * name, int data, int offset) {
 			last=p;
 		}
 		size++;
-		printf("Label inserted:\"%s\" \"%s\" \"%d\" \"%d\"\n",p->symbol, p->label, p->data, p->address);
+		printf("Symbol inserted:\"%s\" \"%s\" \"%d\" \"%d\"\n",p->symbol, p->label, p->data, p->address);
 	}
 }
 
@@ -73,9 +75,9 @@ void Display() {
 	int i;
 	struct SymbTab *p;
 	p=first;
-	printf("\n\tLABEL\t\tSYMBOL\t\tVALUE\t\tADDRESS\n");
+	printf("\n\tTYPE\t\tSYMBOL\t\tVALUE\t\tADDRESS\n");
 	for(i=0;i<size;i++) {
-		printf("\t%s\t\t%s\t\t%d\t\t%d\n",p->label,p->symbol,p->data,p->address);
+		printf("\t%s\t\t%s\t\t%d\t\t%d\n",p->symbol,p->label,p->data,p->address);
 		p=p->next;
 	}
 }
@@ -93,13 +95,13 @@ int Search(char * name) {
 }
 
 void Modify(char * name, int value) {
-	int temp = 0;
+	int temp = 0;	
+	struct SymbTab *p;
+	p = first;
 	if(!Search(name)) {
 		puts("symbol does not exists");
 		return;
 	}
-	struct SymbTab *p;
-	p = first;
 	for(int i=0;i<size;i++) {
 	
 		if(strcmp(p->label,name)==0) {
@@ -142,18 +144,18 @@ void Delete(char * name) {
 			p->next=q->next;
 		}
 		size--;
-		printf("\n\tAfter Deletion:\n");
-		puts("Symbol deleted");
+		printf("deleted %s\n", name);
 	}
 }
 
 int getData(char * name) {
-	struct SymTab p*;
+	struct SymbTab *p;
 	p=first;
 	for(int i = 0; i < size; i++) {
 		if(strcmp(p->label, name)==0) {
 			return p->data;
 		}
+		p=p->next;
 	}
 	return -1;
 }

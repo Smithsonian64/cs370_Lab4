@@ -15,7 +15,6 @@ Changes:
 
 */
 %{
-
 int mydebug=0;
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,8 +25,16 @@ int mydebug=0;
 
 %%
 
+"help"		{
+			return (HELP);
+		}
+
 "search"	{
 			return (SEARCH);
+		}
+
+"delete"	{
+			return (DELETE);
 		}
 
 "display"	{
@@ -58,7 +65,7 @@ int mydebug=0;
 			if (mydebug) fprintf(stderr,"Whitespace found\n");
 		}
 
-[=\%&|;] 	{
+[=\;] 	{
 			if (mydebug) fprintf(stderr,"return a token %c\n",*yytext); 
                        	return (*yytext);
 		}
@@ -80,6 +87,21 @@ int mydebug=0;
 "\/"		{
 			if(mydebug) fprintf(stderr, "found DIV\n");
 			return DIV;
+		}
+
+"\&"		{
+			if(mydebug) fprintf(stderr, "found AND\n");
+			return AND;
+		}
+
+"\|"		{
+			if(mydebug) fprintf(stderr, "found OR\n");
+			return OR;
+		}
+
+"\%"		{
+			if(mydebug) fprintf(stderr, "found MODULUS\n");
+			return MODULUS;
 		}
 
 [(]		{	

@@ -52,18 +52,54 @@ extern int yydebug;
     INT = 258,
     INTEGER = 259,
     VARIABLE = 260,
-    UMINUS = 261
+    PLUS = 261,
+    MINUS = 262,
+    MULT = 263,
+    DIV = 264,
+    AND = 265,
+    OR = 266,
+    MODULUS = 267,
+    DISPLAY = 268,
+    DELETE = 269,
+    SEARCH = 270,
+    MODIFY = 271,
+    HELP = 272,
+    UMINUS = 273
   };
 #endif
 /* Tokens.  */
 #define INT 258
 #define INTEGER 259
 #define VARIABLE 260
-#define UMINUS 261
+#define PLUS 261
+#define MINUS 262
+#define MULT 263
+#define DIV 264
+#define AND 265
+#define OR 266
+#define MODULUS 267
+#define DISPLAY 268
+#define DELETE 269
+#define SEARCH 270
+#define MODIFY 271
+#define HELP 272
+#define UMINUS 273
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 66 "lab4.y"
+
+
+	char * string;
+	int value;
+
+
+#line 100 "y.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

@@ -43,10 +43,12 @@
 #include <ctype.h>
 #include "lex.yy.c"
 #include "symtable.h"
+#define MAX 3
 
 int regs[26];
 int base, debugsw;
 int offset = 0;
+int num = 0;
 
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
@@ -75,9 +77,14 @@ void yyerror (s)  /* Called by yyparse on error */
 %token MINUS
 %token MULT
 %token DIV
+%token AND
+%token OR
+%token MODULUS
 %token DISPLAY
+%token DELETE
 %token SEARCH
 %token MODIFY
+%token HELP
 
 %left '|'
 %left '&'
@@ -97,42 +104,101 @@ p	:	/*empty*/
 	;
 
 decls	: 	/*empty*/
+      	|	decls '\n'
+      	|	decls command '\n'
       	|	decls dec
+	|	decls error
+			{
+				puts("did nothing instead");
+				/*puts("aborting...");
+				exit(1);*/
+			}
 	;
 
 dec	:	INT VARIABLE ';' '\n'
     			{
-				Insert("INT", "temp", 0, offset++);
+				if(Search($2)==1) puts("variable already exists");
+				else if(num >= MAX) puts("at max number of variables");
+				else {
+					Insert("INT", $2, 0, offset++);
+					num++;
+				}
+				
 			}
-    	|	INT expr '=' expr ';' '\n'	
-    			{	
-				Insert("INT", $2, $4, offset++);
+    	|	INT VARIABLE '=' expr ';' '\n'	
+    			{		
+				if(Search($2)==1) puts("variable already exists");	
+				else if(num >= MAX) puts("at max number of variables");
+				else {
+					Insert("INT", $2, $4, offset++);
+					num++;
+				}
 			}
     	;
 
 list	:	/* empty */
+     	|	list '\n'
 	|	list stat '\n'
 	|	list error '\n'
-	|	list command '\n'
-			{ 
-				yyerrok; 
+			{
+				puts("did nothing instead");
+				/*puts("aborting...");
+				exit(1);*/
 			}
+	|	list command '\n'
+	|	list decls
 	;
 
 stat	:	expr
 			{ 
 				fprintf(stderr,"the anwser is %d\n", $1); 
 			}
+	|	VARIABLE
+			{
+				if(Search($1)!=1) puts("variable does not exist");
+				else fprintf(stderr,"%d\n",getData($1));
+			}
 	|	VARIABLE '=' expr
 			{ 
 				if(Search($1)==1) Modify($1, $3);
-				else puts("label does not exist"); 
+				else puts("variable does not exist"); 
+			}	
+	|	VARIABLE '=' VARIABLE
+			{ 
+				if(Search($1)!=1) {
+					puts("left side variable does not exist");
+				}
+				else if(Search($3)!=1) {
+					puts("right side variable does not exist");
+				}
+				else {
+					Modify($1, getData($3));
+				}
 			}
 	;
 
-command	:	DISPLAY
+command	:	HELP	
+			{
+				int c;
+				FILE *helpFile;
+				helpFile = fopen("help.txt", "r");
+				if (helpFile) {
+    				while ((c = getc(helpFile)) != EOF)
+        				putchar(c);
+    				fclose(helpFile);
+}
+			}
+	|	DISPLAY
 			{
 				Display();
+			}
+	|	DELETE	VARIABLE
+			{
+				if(Search($2)!=1) puts("variable does not exist");
+				else {
+					Delete($2);
+					num--;
+				}
 			}
 	|	SEARCH VARIABLE
 			{
@@ -150,10 +216,6 @@ expr	:	'(' expr ')'
 			{ 
 				$$ = $2; 
 			}
-		VARIABLE '=' VARIABLE
-			{
-				/*Modify($1, */
-			}
 	|	expr MINUS  expr
 			{ 
 				$$ = $1 - $3; 
@@ -170,15 +232,15 @@ expr	:	'(' expr ')'
 			{ 
 				$$ = $1 / $3; 
 			}
-	|	expr '%' expr
+	|	expr MODULUS expr
 			{ 
 				$$ = $1 % $3; 
 			}
-	|	expr '&' expr
+	|	expr AND expr
 			{ 
 				$$ = $1 & $3; 
 			}
-	|	expr '|' expr
+	|	expr OR expr
 			{
 				$$ = $1 | $3; 
 			}
@@ -188,7 +250,8 @@ expr	:	'(' expr ')'
 			}
 	|	VARIABLE
 			{ 
-				$$ = $1; 
+				if(Search($1)==1)$$ = getData($1);
+				else $$ = $1; 
 			}
 	|	INTEGER {
 				$$=$1;
@@ -196,12 +259,10 @@ expr	:	'(' expr ')'
 	;
 
 
-
-
 %%	/* end of rules, start of program */
 
 int main(void) { 
-	
+	puts("Type \"help\" to see commands and instructions");	
 	yyparse();
 	return 1;
 }

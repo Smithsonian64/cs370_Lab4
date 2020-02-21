@@ -41,6 +41,7 @@
 	/* begin specs */
 #include <stdio.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include "lex.yy.c"
 #include "symtable.h"
 #define MAX 3
@@ -49,6 +50,7 @@ int regs[26];
 int base, debugsw;
 int offset = 0;
 int num = 0;
+bool error = false;
 
 void yyerror (s)  /* Called by yyparse on error */
      char *s;
@@ -83,8 +85,8 @@ void yyerror (s)  /* Called by yyparse on error */
 %token DISPLAY
 %token DELETE
 %token SEARCH
-%token MODIFY
 %token HELP
+%token REGS
 
 %left OR
 %left AND
@@ -119,7 +121,8 @@ dec	:	INT VARIABLE ';' '\n'
 				if(Search($2)==1) puts("variable already exists");
 				else if(num >= MAX) puts("at max number of variables");
 				else {
-					Insert("INT", $2, 0, offset++);
+					regs[offset] = 0;
+					Insert("INT", $2, offset++);
 					num++;
 				}
 				
@@ -129,7 +132,8 @@ dec	:	INT VARIABLE ';' '\n'
 				if(Search($2)==1) puts("variable already exists");	
 				else if(num >= MAX) puts("at max number of variables");
 				else {
-					Insert("INT", $2, $4, offset++);
+					regs[offset] = $4;
+					Insert("INT", $2, offset++);
 					num++;
 				}
 			}
@@ -155,12 +159,17 @@ stat	:	expr
 	|	VARIABLE
 			{
 				if(Search($1)!=1) puts("variable does not exist");
-				else fprintf(stderr,"%d\n",getData($1));
+				else fprintf(stderr,"%d\n",regs[getAddress($1)]);
 			}
 	|	VARIABLE '=' expr
 			{ 
-				if(Search($1)==1) Modify($1, $3);
-				else puts("variable does not exist"); 
+				if(Search($1)==1 && error != true) {
+					 regs[getAddress($1)] = $3;
+				}
+				else {
+					puts("variable does not exist");
+					error = false;
+				} 
 			}	
 	|	VARIABLE '=' VARIABLE
 			{ 
@@ -171,7 +180,7 @@ stat	:	expr
 					puts("right side variable does not exist");
 				}
 				else {
-					Modify($1, getData($3));
+					regs[getAddress($1)] = regs[getAddress($3)];
 				}
 			}
 	;
@@ -204,10 +213,12 @@ command	:	HELP
 				if(Search($2)==1)puts("true");
 				else(puts("false"));
 			}
-	|	MODIFY VARIABLE expr
+	|	REGS
 			{
-				Modify($2, $3);
-				printf("changed %s to %d\n", $2, $3);
+				printf("\tregister\tvalue\n");
+				for(int i = 0; i < MAX; i++) {
+					printf("\t%d\t\t%d\n",i ,regs[i]);
+				}
 			}
 	;
 
@@ -249,8 +260,13 @@ expr	:	'(' expr ')'
 			}
 	|	VARIABLE
 			{ 
-				if(Search($1)==1)$$ = getData($1);
-				else $$ = $1; 
+				if(Search($1)==0) {
+					fprintf(stderr, "variable not in symbol table\n");
+					error = true;
+				}
+				else {
+					$$ = regs[getAddress($1)]; 
+				}
 			}
 	|	INTEGER {
 				$$=$1;

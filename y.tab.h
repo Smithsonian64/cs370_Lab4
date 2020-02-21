@@ -62,8 +62,8 @@ extern int yydebug;
     DISPLAY = 268,
     DELETE = 269,
     SEARCH = 270,
-    MODIFY = 271,
-    HELP = 272,
+    HELP = 271,
+    REGS = 272,
     UMINUS = 273
   };
 #endif
@@ -81,15 +81,15 @@ extern int yydebug;
 #define DISPLAY 268
 #define DELETE 269
 #define SEARCH 270
-#define MODIFY 271
-#define HELP 272
+#define HELP 271
+#define REGS 272
 #define UMINUS 273
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 66 "lab4.y"
+#line 68 "lab4.y"
 
 
 	char * string;

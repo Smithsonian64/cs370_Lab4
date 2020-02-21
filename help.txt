@@ -8,6 +8,11 @@ display
 	
 	//displays the current symbol table//
 
+regs
+	
+	//display the current address registers 
+	and their values//
+
 search VARIABLE
 	
 	//prints true if variable exists in the
@@ -19,13 +24,6 @@ delete VARIABLE
 	the symbol table. Does nothing if
 	the variable does not exists//
  
-modify VARIABLE VALUE
-	
-	//Changes the indicated variable's
-	value to the idicated value. Does
-	nothing if the variable does not
-	exist.//
-
 help
 	
 	//displays help information.//

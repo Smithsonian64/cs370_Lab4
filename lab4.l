@@ -25,38 +25,44 @@ int mydebug=0;
 
 %%
 
+"regs"		{	
+			if (mydebug) fprintf(stderr,"REGS found\n"); 
+			return (REGS);
+		}
+
 "help"		{
+			if (mydebug) fprintf(stderr,"HELP found\n"); 
 			return (HELP);
 		}
 
 "search"	{
+			if (mydebug) fprintf(stderr,"SEARCH found\n"); 
 			return (SEARCH);
 		}
 
 "delete"	{
+			if (mydebug) fprintf(stderr,"DELETE found\n"); 
 			return (DELETE);
 		}
 
 "display"	{
+			if (mydebug) fprintf(stderr,"DISPLAY found\n"); 
 			return (DISPLAY);
 		}
 
-"modify"	{
-			return (MODIFY);
-		}
-
 "int"		{
+			if (mydebug) fprintf(stderr,"INT found\n"); 
 			return (INT);
 		}
 
 [a-zA-Z][a-zA-Z]*	{
-			if (mydebug) fprintf(stderr,"Letter found\n"); 
+			if (mydebug) fprintf(stderr,"VARIABLE found\n"); 
 			yylval.string=strdup(yytext); 
 			return(VARIABLE);
 		}
 
 [0-9][0-9]*	{
-			if (mydebug) fprintf(stderr,"Digit found\n"); 
+			if (mydebug) fprintf(stderr,"INTEGER found\n"); 
 			yylval.value=atoi((const char *)yytext); 
 			return(INTEGER);
 		}

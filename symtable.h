@@ -24,16 +24,15 @@
 int size=0;
 
 struct SymbTab {
-	char * label;
-	char * symbol;
-	int data;
+	char * name;
+	char * type;
 	int address;
 	struct SymbTab *next;
 };
 
 struct SymbTab *first,*last;
 
-void Insert(char * symbol, char * name, int data, int offset);
+void Insert(char * type, char * name, int offset);
 
 void Display();
 
@@ -45,18 +44,17 @@ void Delete(char * name);
 
 int getData(char * name);
 
-void Insert(char * symbol, char * name, int data, int offset) {
+void Insert(char * type, char * name, int offset) {
 	int n;
 	n=Search(name);
 	if(n==1)
-		printf("\n\tThe label exists already in the symbol table\n\tDuplicate can't be inserted");
+		printf("\n\tThe variable exists already in the symbol table\n\tDuplicate can't be inserted");
 	else {
 		struct SymbTab *p;
 		p=malloc(sizeof(struct SymbTab));
-		p->label = name;
-		p->symbol = symbol;
+		p->name = name;
+		p->type = type;
 		p->address = offset;
-		p->data = data;
 		p->next=NULL;
 		if(size==0) {
 			first=p;
@@ -67,7 +65,7 @@ void Insert(char * symbol, char * name, int data, int offset) {
 			last=p;
 		}
 		size++;
-		printf("Symbol inserted:\"%s\" \"%s\" \"%d\" \"%d\"\n",p->symbol, p->label, p->data, p->address);
+		printf("Symbol inserted:\"%s\" \"%s\" \"%d\"\n",p->type, p->name, p->address);
 	}
 }
 
@@ -75,9 +73,9 @@ void Display() {
 	int i;
 	struct SymbTab *p;
 	p=first;
-	printf("\n\tTYPE\t\tSYMBOL\t\tVALUE\t\tADDRESS\n");
+	printf("\n\tTYPE\t\tSYMBOL\t\tADDRESS\n");
 	for(i=0;i<size;i++) {
-		printf("\t%s\t\t%s\t\t%d\t\t%d\n",p->symbol,p->label,p->data,p->address);
+		printf("\t%s\t\t%s\t\t%d\n",p->type,p->name,p->address);
 		p=p->next;
 	}
 }
@@ -87,13 +85,14 @@ int Search(char * name) {
 	struct SymbTab *p;
 	p=first;
 	for(i=0;i<size;i++) {
-		if(strcmp(p->label,name)==0)
+		if(strcmp(p->name,name)==0)
 		flag=1;
 		p=p->next;
 	}	
 	return flag;
 }
-
+//Modify unnecessary at this point
+/*
 void Modify(char * name, int value) {
 	int temp = 0;	
 	struct SymbTab *p;
@@ -104,16 +103,16 @@ void Modify(char * name, int value) {
 	}
 	for(int i=0;i<size;i++) {
 	
-		if(strcmp(p->label,name)==0) {
-			temp = p->data;
-			p->data = value;
+		if(strcmp(p->name,name)==0) {
+		
+		
 			break;
 		}
 		p = p->next;
 	}
 	return;
 }
-
+*/
 void Delete(char * name) {
 	int a;
 	struct SymbTab *p,*q;
@@ -124,11 +123,11 @@ void Delete(char * name) {
 		return;
 	}
 	else {
-		if(strcmp(first->label,name)==0)
+		if(strcmp(first->name,name)==0)
 			first=first->next;
-		else if(strcmp(last->label,name)==0) {
+		else if(strcmp(last->name,name)==0) {
 			q=p->next;
-			while(strcmp(q->label,name)!=0) {
+			while(strcmp(q->name,name)!=0) {
 				p=p->next;
 				q=q->next;
 			}
@@ -137,7 +136,7 @@ void Delete(char * name) {
 		}
 		else {
 			q=p->next;
-			while(strcmp(q->label,name)!=0) {
+			while(strcmp(q->name,name)!=0) {
 				p=p->next;
 				q=q->next;
 			}
@@ -148,12 +147,12 @@ void Delete(char * name) {
 	}
 }
 
-int getData(char * name) {
+int getAddress(char * name) {
 	struct SymbTab *p;
 	p=first;
 	for(int i = 0; i < size; i++) {
-		if(strcmp(p->label, name)==0) {
-			return p->data;
+		if(strcmp(p->name, name)==0) {
+			return p->address;
 		}
 		p=p->next;
 	}

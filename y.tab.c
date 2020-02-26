@@ -522,10 +522,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   103,   103,   104,   107,   108,   109,   110,   111,   119,
-     130,   142,   143,   144,   145,   151,   152,   155,   159,   164,
-     174,   188,   199,   203,   211,   216,   225,   229,   233,   237,
-     241,   245,   249,   253,   257,   261,   271
+       0,   103,   103,   104,   107,   108,   109,   110,   111,   117,
+     130,   145,   146,   147,   148,   152,   153,   156,   160,   165,
+     175,   189,   200,   204,   212,   217,   226,   230,   234,   238,
+     242,   246,   250,   254,   258,   262,   272
 };
 #endif
 
@@ -1352,16 +1352,16 @@ yyreduce:
   case 8:
 #line 112 "lab4.y"
     {
-				puts("did nothing instead");
-				/*puts("aborting...");
-				exit(1);*/
+				puts("error, did nothing");
 			}
-#line 1360 "y.tab.c"
+#line 1358 "y.tab.c"
     break;
 
   case 9:
-#line 120 "lab4.y"
+#line 118 "lab4.y"
     {
+				/*inserts variable into symbol table iff variable does not exist and 
+				offset is not at MAX*/
 				if(Search((yyvsp[-2].string))==1) puts("variable already exists");
 				else if(num >= MAX) puts("at max number of variables");
 				else {
@@ -1377,6 +1377,9 @@ yyreduce:
   case 10:
 #line 131 "lab4.y"
     {		
+				/*inserts variable into symbol table iff variable does not exist and 
+				offset is not at MAX. This declaration can be used to define a variable
+				with a value within the declaration.*/
 				if(Search((yyvsp[-4].string))==1) puts("variable already exists");	
 				else if(num >= MAX) puts("at max number of variables");
 				else {
@@ -1385,38 +1388,36 @@ yyreduce:
 					num++;
 				}
 			}
-#line 1389 "y.tab.c"
+#line 1392 "y.tab.c"
     break;
 
   case 14:
-#line 146 "lab4.y"
+#line 149 "lab4.y"
     {
 				puts("did nothing instead");
-				/*puts("aborting...");
-				exit(1);*/
 			}
-#line 1399 "y.tab.c"
+#line 1400 "y.tab.c"
     break;
 
   case 17:
-#line 156 "lab4.y"
+#line 157 "lab4.y"
     { 
 				fprintf(stderr,"the anwser is %d\n", (yyvsp[0].value)); 
 			}
-#line 1407 "y.tab.c"
+#line 1408 "y.tab.c"
     break;
 
   case 18:
-#line 160 "lab4.y"
+#line 161 "lab4.y"
     {
 				if(Search((yyvsp[0].string))!=1) puts("variable does not exist");
 				else fprintf(stderr,"%d\n",regs[getAddress((yyvsp[0].string))]);
 			}
-#line 1416 "y.tab.c"
+#line 1417 "y.tab.c"
     break;
 
   case 19:
-#line 165 "lab4.y"
+#line 166 "lab4.y"
     { 
 				if(Search((yyvsp[-2].string))==1 && error != true) {
 					 regs[getAddress((yyvsp[-2].string))] = (yyvsp[0].value);
@@ -1426,11 +1427,11 @@ yyreduce:
 					error = false;
 				} 
 			}
-#line 1430 "y.tab.c"
+#line 1431 "y.tab.c"
     break;
 
   case 20:
-#line 175 "lab4.y"
+#line 176 "lab4.y"
     { 
 				if(Search((yyvsp[-2].string))!=1) {
 					puts("left side variable does not exist");
@@ -1442,11 +1443,11 @@ yyreduce:
 					regs[getAddress((yyvsp[-2].string))] = regs[getAddress((yyvsp[0].string))];
 				}
 			}
-#line 1446 "y.tab.c"
+#line 1447 "y.tab.c"
     break;
 
   case 21:
-#line 189 "lab4.y"
+#line 190 "lab4.y"
     {
 				int c;
 				FILE *helpFile;
@@ -1457,19 +1458,19 @@ yyreduce:
     				fclose(helpFile);
 }
 			}
-#line 1461 "y.tab.c"
+#line 1462 "y.tab.c"
     break;
 
   case 22:
-#line 200 "lab4.y"
+#line 201 "lab4.y"
     {
 				Display();
 			}
-#line 1469 "y.tab.c"
+#line 1470 "y.tab.c"
     break;
 
   case 23:
-#line 204 "lab4.y"
+#line 205 "lab4.y"
     {
 				if(Search((yyvsp[0].string))!=1) puts("variable does not exist");
 				else {
@@ -1477,103 +1478,103 @@ yyreduce:
 					num--;
 				}
 			}
-#line 1481 "y.tab.c"
+#line 1482 "y.tab.c"
     break;
 
   case 24:
-#line 212 "lab4.y"
+#line 213 "lab4.y"
     {
 				if(Search((yyvsp[0].string))==1)puts("true");
 				else(puts("false"));
 			}
-#line 1490 "y.tab.c"
+#line 1491 "y.tab.c"
     break;
 
   case 25:
-#line 217 "lab4.y"
+#line 218 "lab4.y"
     {
 				printf("\tregister\tvalue\n");
 				for(int i = 0; i < MAX; i++) {
 					printf("\t%d\t\t%d\n",i ,regs[i]);
 				}
 			}
-#line 1501 "y.tab.c"
+#line 1502 "y.tab.c"
     break;
 
   case 26:
-#line 226 "lab4.y"
+#line 227 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-1].value); 
 			}
-#line 1509 "y.tab.c"
+#line 1510 "y.tab.c"
     break;
 
   case 27:
-#line 230 "lab4.y"
+#line 231 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-2].value) - (yyvsp[0].value); 
 			}
-#line 1517 "y.tab.c"
+#line 1518 "y.tab.c"
     break;
 
   case 28:
-#line 234 "lab4.y"
+#line 235 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-2].value) + (yyvsp[0].value); 
 			}
-#line 1525 "y.tab.c"
+#line 1526 "y.tab.c"
     break;
 
   case 29:
-#line 238 "lab4.y"
+#line 239 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-2].value) * (yyvsp[0].value); 
 			}
-#line 1533 "y.tab.c"
+#line 1534 "y.tab.c"
     break;
 
   case 30:
-#line 242 "lab4.y"
+#line 243 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-2].value) / (yyvsp[0].value); 
 			}
-#line 1541 "y.tab.c"
+#line 1542 "y.tab.c"
     break;
 
   case 31:
-#line 246 "lab4.y"
+#line 247 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-2].value) % (yyvsp[0].value); 
 			}
-#line 1549 "y.tab.c"
+#line 1550 "y.tab.c"
     break;
 
   case 32:
-#line 250 "lab4.y"
+#line 251 "lab4.y"
     { 
 				(yyval.value) = (yyvsp[-2].value) & (yyvsp[0].value); 
 			}
-#line 1557 "y.tab.c"
+#line 1558 "y.tab.c"
     break;
 
   case 33:
-#line 254 "lab4.y"
+#line 255 "lab4.y"
     {
 				(yyval.value) = (yyvsp[-2].value) | (yyvsp[0].value); 
 			}
-#line 1565 "y.tab.c"
+#line 1566 "y.tab.c"
     break;
 
   case 34:
-#line 258 "lab4.y"
+#line 259 "lab4.y"
     { 
 				(yyval.value) = -(yyvsp[0].value); 
 			}
-#line 1573 "y.tab.c"
+#line 1574 "y.tab.c"
     break;
 
   case 35:
-#line 262 "lab4.y"
+#line 263 "lab4.y"
     { 
 				if(Search((yyvsp[0].string))==0) {
 					fprintf(stderr, "variable not in symbol table\n");
@@ -1583,19 +1584,19 @@ yyreduce:
 					(yyval.value) = regs[getAddress((yyvsp[0].string))]; 
 				}
 			}
-#line 1587 "y.tab.c"
+#line 1588 "y.tab.c"
     break;
 
   case 36:
-#line 271 "lab4.y"
+#line 272 "lab4.y"
     {
 				(yyval.value)=(yyvsp[0].value);
 			}
-#line 1595 "y.tab.c"
+#line 1596 "y.tab.c"
     break;
 
 
-#line 1599 "y.tab.c"
+#line 1600 "y.tab.c"
 
       default: break;
     }
@@ -1827,7 +1828,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 277 "lab4.y"
+#line 278 "lab4.y"
 	/* end of rules, start of program */
 
 int main(void) { 

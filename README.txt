@@ -22,14 +22,10 @@ Completed requirments:
  redesigned so that declaration mode and statement mode no longer
  exist and either can be done at any time.
 
--When a variable is in an expression its value it fetched using its name
+-When a variable is in an expression its address it fetched using its name then the value is fetched using the address
 
--When a variable is on the left side its value is changed in the symbol table.
- Its address is also stored in the symbol table. The regs array isnt used.
+-When a variable is on the left side its value is changed in regs.
+ Its address is also stored in the symbol table.
 
--A function getData(char * name) was created to retrieve the value of a
+-A function getAddress(char * name) was created to retrieve the address of a
  variable
-
--This project does not use regs[] and instead stores everything in the symbol
- table. Variable values are fetched by name rahter than adress becuase it is
- more direct; name->value rather than name->address->value

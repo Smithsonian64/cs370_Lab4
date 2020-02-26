@@ -55,7 +55,7 @@ int mydebug=0;
 			return (INT);
 		}
 
-[a-zA-Z][a-zA-Z]*	{
+[a-zA-Z][a-zA-Z0-9]*	{
 			if (mydebug) fprintf(stderr,"VARIABLE found\n"); 
 			yylval.string=strdup(yytext); 
 			return(VARIABLE);

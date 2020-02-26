@@ -110,14 +110,14 @@ decls	: 	/*empty*/
       	|	decls dec
 	|	decls error
 			{
-				puts("did nothing instead");
-				/*puts("aborting...");
-				exit(1);*/
+				puts("error, did nothing");
 			}
 	;
 
 dec	:	INT VARIABLE ';' '\n'
     			{
+				/*inserts variable into symbol table iff variable does not exist and 
+				offset is not at MAX*/
 				if(Search($2)==1) puts("variable already exists");
 				else if(num >= MAX) puts("at max number of variables");
 				else {
@@ -129,6 +129,9 @@ dec	:	INT VARIABLE ';' '\n'
 			}
     	|	INT VARIABLE '=' expr ';' '\n'	
     			{		
+				/*inserts variable into symbol table iff variable does not exist and 
+				offset is not at MAX. This declaration can be used to define a variable
+				with a value within the declaration.*/
 				if(Search($2)==1) puts("variable already exists");	
 				else if(num >= MAX) puts("at max number of variables");
 				else {
@@ -145,8 +148,6 @@ list	:	/* empty */
 	|	list error '\n'
 			{
 				puts("did nothing instead");
-				/*puts("aborting...");
-				exit(1);*/
 			}
 	|	list command '\n'
 	|	list decls
